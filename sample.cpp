@@ -10,20 +10,39 @@ typedef struct node {
     struct node *next;
 } node_t;
 
+node_t* createNode(int val) {
+    node_t* tmp = NULL;
+    tmp = (node_t *) malloc(sizeof(node_t));
+    tmp->val = val;
+    tmp->next = NULL;
+    return tmp;
+}
+
 // linked list operation
 void appendNode(node_t** head, node_t* newNode) {
     node_t* tmp;
-    
-    if (*head == NULL) {
-        cout << "\t" << "head " << head << " " << *head << endl;
-        cout << "\t" << "newNode " << newNode << endl;
-        head = (node_t **) newNode;
-        // cout << "\t" << "head " << head << " newNode " << newNode << endl;
+
+    tmp = *head;
+
+    if (tmp == NULL) {
+        *head = newNode;
     } else {
-        /* tmp = head;
         while (tmp->next != NULL)
             tmp = tmp->next;
-        tmp->next = newNode; */
+        tmp->next = newNode;
+    }
+}
+
+void rmAllNodes(node_t** head) {
+    node_t *tmp;
+
+    if (*head != NULL){
+        while ((*head)->next != NULL) {
+            tmp = *head;
+            *head = (*head)->next;
+            free(tmp);
+        }
+        free(*head);
     }
 }
 
@@ -31,9 +50,17 @@ void printNodes(node_t* head) {
     node_t *tmp;
 
     tmp = head;
-    while(tmp != NULL) {
-        cout << "\t" << "node val is " << tmp->val << endl;
+
+    if (tmp == NULL) {
+        cout << "\t" << "the linked list is empty" << endl;
+    } else {
+        cout << "\t" << "the linked list is " << tmp->val;
         tmp = tmp->next;
+        while (tmp != NULL) {
+            cout << "->" << tmp->val;
+            tmp = tmp->next;
+        }
+        cout << endl;
     }
 }
 
@@ -86,15 +113,23 @@ int main(int argc, char *argv[]) {
     // pterManip();
     // funcPter();
 
-    node_t* head;
-    node_t* tmp = (node_t *) malloc(sizeof(node_t));
-    tmp->val = 5;
-    tmp->next = NULL;
-    cout << "head " << head << " " << &head << " tmp " << tmp << endl;
+    node_t* head = NULL;
+    node_t* tmp = createNode(5);
+    
     appendNode(&head, tmp);
-    // cout << "head " << head << " tmp " << tmp << endl;
-    // head = tmp;
+    tmp = createNode(10);
+    appendNode(&head, tmp);
+    tmp = createNode(15);
+    appendNode(&head, tmp);
+
     printNodes(head);
+
+    cout << "\t" << "what does the fox say " << tmp << " " << (*tmp).val << endl;
+    free(tmp);
+    cout << "\t" << "what does the fox say " << tmp << " " << (*tmp).val << endl;
+
+    // rmAllNodes(&head);
+    // printNodes(head);
     
     return 0;
 }
