@@ -10,6 +10,7 @@ typedef struct node {
     struct node *next;
 } node_t;
 
+// linked list operation
 node_t* createNode(int val) {
     node_t* tmp = NULL;
     tmp = (node_t *) malloc(sizeof(node_t));
@@ -18,7 +19,6 @@ node_t* createNode(int val) {
     return tmp;
 }
 
-// linked list operation
 void appendNode(node_t** head, node_t* newNode) {
     node_t* tmp;
 
@@ -33,6 +33,47 @@ void appendNode(node_t** head, node_t* newNode) {
     }
 }
 
+void insertNode(node_t** head, int offset, node_t* newNode) {
+    node_t *prev, *curr;
+    prev = NULL;
+    curr = *head;
+
+    while (--offset > 0 && curr != NULL) {
+        prev = curr;
+        curr = curr->next;
+    }
+
+    if (offset == 0 && curr != NULL) {
+        if (prev == NULL) {
+            *head = newNode;
+        } else {
+            prev->next = newNode;
+        }
+        newNode->next = curr;
+    }
+}
+
+void rmNode(node_t** head, int offset) {
+    node_t *prev, *curr;
+    prev = NULL;
+    curr = *head;
+
+    while (--offset > 0 && curr != NULL) {
+        prev = curr;
+        curr = curr->next;
+    }
+
+    if (offset == 0 && curr != NULL) {
+        if (prev == NULL) {
+            *head = curr->next;
+        } else {
+            prev->next = curr->next;
+        }
+        free(curr);
+        curr = NULL;
+    }
+}
+
 void rmAllNodes(node_t** head) {
     node_t *tmp;
 
@@ -41,8 +82,10 @@ void rmAllNodes(node_t** head) {
             tmp = *head;
             *head = (*head)->next;
             free(tmp);
+            tmp = NULL;
         }
         free(*head);
+        *head = NULL;
     }
 }
 
@@ -62,6 +105,28 @@ void printNodes(node_t* head) {
         }
         cout << endl;
     }
+}
+
+void nodeManip() {
+    node_t* head = NULL;
+    node_t* tmp = createNode(5);
+    
+    appendNode(&head, tmp);
+    tmp = createNode(10);
+    appendNode(&head, tmp);
+    tmp = createNode(15);
+    appendNode(&head, tmp);
+
+    printNodes(head);
+
+    tmp = createNode(7);
+    insertNode(&head, 2, tmp);
+    printNodes(head);
+
+    rmNode(&head, 2);
+    printNodes(head);
+
+    rmAllNodes(&head);
 }
 
 // function pointers
@@ -112,24 +177,8 @@ void pterManip() {
 int main(int argc, char *argv[]) {
     // pterManip();
     // funcPter();
-
-    node_t* head = NULL;
-    node_t* tmp = createNode(5);
+    nodeManip();
     
-    appendNode(&head, tmp);
-    tmp = createNode(10);
-    appendNode(&head, tmp);
-    tmp = createNode(15);
-    appendNode(&head, tmp);
-
-    printNodes(head);
-
-    cout << "\t" << "what does the fox say " << tmp << " " << (*tmp).val << endl;
-    free(tmp);
-    cout << "\t" << "what does the fox say " << tmp << " " << (*tmp).val << endl;
-
-    // rmAllNodes(&head);
-    // printNodes(head);
     
     return 0;
 }
